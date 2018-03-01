@@ -24,6 +24,7 @@ class ride
     int earlStart;
     int lateFinish;
     int takken;
+    int index;
     ride(){takken=0;}
 
 };
@@ -32,10 +33,13 @@ class car {
 pos currentPos;
 int timeRequired;
 ride *  pCurrentRide;
+int noRides;
+vector <int> indeces;
  car()
  {
      currentPos.setPos(0,0);
      pCurrentRide =NULL;
+     noRides = 0;
  }
  int isAvailable()
  {
@@ -83,16 +87,15 @@ ride *  pCurrentRide;
                 abs(nRide.startPos.y-nRide.finishPos.y);
         return timeTAkken;
     }
-
-
+    
 int main(int argv, char* argc[])
 {
-    if (1)//(argv>1)
+    if (argv>1)
 	{
-		ifstream infile("C:\\Users\\OmarAli\\Desktop\\HashCode\\a_example.in");//(argc[1]);
+		ifstream infile(argc[1]);//("C:\\Users\\OmarAli\\Desktop\\HashCode\\a_example.in");//(argc[1]);
 		string sFile="", temp, str;
 		stringstream ss, ssEachRide;
-		int token, tokenArray[6], i=0, arrEachRide[6];
+		int token, tokenArray[6], i=0, arrEachRide[6], k=0;
 		getline(infile, str);
 		ss << str;
 		while(ss >> token)
@@ -108,6 +111,8 @@ int main(int argv, char* argc[])
             T = tokenArray[5];
         //cout << tokenArray[0];
         //cout << R << C << F << N << B << T;
+        vector <ride> rides;
+        rides.reserve(N);
 		while (getline(infile, temp))
 		{
 			//if (temp.find("\r") != -1) temp.replace(temp.find("\r"), 2, ""); //for linux
@@ -122,16 +127,44 @@ int main(int argv, char* argc[])
                 i++;
             }
             // fill the struct
-            vector <ride> rides;
-            rides.reserve(N);
-            //rides.push_back();
-            for(int o=0 ; o<6 ; o++)
-            {
-                cout << arrEachRide[o] << " ";
-            }
-            cout << endl;
+            ride xRide;
+            xRide.startPos.setPos(arrEachRide[0], arrEachRide[1]);
+            xRide.finishPos.setPos(arrEachRide[2], arrEachRide[3]);
+            xRide.earlStart = arrEachRide[4];
+            xRide.lateFinish = arrEachRide[5];
+            xRide.index = k;
+            rides.push_back(xRide); 
+            k++;
 		}
 		infile.close();
+		vector <car> cars;
+		cars.reserve(F);
+		sort(rides.begin(), rides.end(), compare);
+		for(int t=0 ; t<T ; t++)
+        {
+            for(int r=0 ; r<rides.size() ; r++)
+            {
+                for(int c=0 ; c<F ; c++)
+                {
+                    if(cars[c].isAvailable())
+                    {
+                        cars[c].handleRide(rides[r]);
+                        cars[c].noRides++;
+                        cars[c].indeces.push_back(rides[r].index);
+                        break;
+                    }
+                }
+                for(int u=0 ; u<F ; u++)
+                {
+                    cars[u].update();
+                }
+            }
+        }
+        ofstream ofile();
+        if(ofile.is_open())
+        {
+            for(int i)
+        }
 	}
     return 0;
 }
