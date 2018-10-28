@@ -1,2 +1,2 @@
 # HashCode
-# Google competetion
+# Google competition
